@@ -12,8 +12,40 @@
         }
 
         #game_container {
+            text-align: center;
             display: grid;
             grid-template-columns: repeat(20, 30px);
+            width: min-content;
+            padding: 1rem;
+            border-radius: 16px;
+            border: 2px solid #000;
+            margin: 1.5rem auto;
+        }
+
+        .button {
+            display: block;
+            padding: 15px 25px;
+            font-size: 24px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #274628;
+            margin: 1rem auto;
+        }
+
+        .button:hover {
+            background-color: #3e8e41
+        }
+
+        .button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #274628;
+            transform: translateY(4px);
         }
 
         div.cell {
@@ -40,9 +72,20 @@
         }
 
         div.marked {
-            background-image: url("./flag.png");
+            background-image: url("./pixel-flag.png");
         }
 
+        div.red {
+            color: red;
+        }
+
+        div.blue {
+            color: blue;
+        }
+
+        div.green {
+            color: green;
+        }
     </style>
 </head>
 
@@ -50,6 +93,8 @@
     <div id="game_container">
 
     </div>
+
+    <button id="restart" class="button">Restart</button>
 </body>
 <script>
 
@@ -57,20 +102,21 @@
         return document.querySelector(selector);
     };
     const gameContainer = querySelector("div#game_container");
+    const restartBtn = querySelector("button#restart");
     const GRID_WIDTH = 20;
     const GRID_HEIGHT = 20;
     const BOMBS_NUMBER = 50;
-    const bombsLocations = [];
+
+    let bombsLocations = [];
     let cells = [];
     let tempArr = [];
 
     const drawGrid = () => {
-
+        cells = [];
+        gameContainer.innerHTML = "";
         for (let i = 0; i < GRID_HEIGHT; i++) {
-
             tempArr = [];
             for (let j = 0; j < GRID_WIDTH; j++) {
-
                 let cellObj = {
                     x: i,
                     y: j,
@@ -80,7 +126,6 @@
                     marked: false,
                     node: null
                 }
-
                 let el = document.createElement("div");
                 el.dataset.id = `${i},${j}`;
                 el.classList.add("cell");
@@ -90,7 +135,6 @@
             }
             cells.push(tempArr);
         }
-
     };
 
     const getNeighbours = (i, j) => {
@@ -124,6 +168,7 @@
 
     const generateBombsPlaces = () => {
         let bombsCounter = 0;
+        bombsLocations = [];
         do {
             let obj = {
                 x: randomBetween(0, GRID_WIDTH - 1),
@@ -160,6 +205,13 @@
                 cells[i][j].node.classList.add("revealed");
                 cells[i][j].revealed = true;
                 cells[i][j].node.innerHTML = cells[i][j].neighbourBombs > 0 ? cells[i][j].neighbourBombs : "";
+                if (cells[i][j].neighbourBombs == 1) {
+                    cells[i][j].node.classList.add("green")
+                } else if (cells[i][j].neighbourBombs == 2) {
+                    cells[i][j].node.classList.add("blue")
+                } else if (cells[i][j].neighbourBombs > 2) {
+                    cells[i][j].node.classList.add("red")
+                }
                 if (cells[i][j].bomb) {
                     cells[i][j].node.classList.add("bomb");
                 }
@@ -175,12 +227,19 @@
             cells[x][y].node.classList.add("revealed");
             cells[x][y].revealed = true;
             cells[x][y].node.innerHTML = cells[x][y].neighbourBombs > 0 ? cells[x][y].neighbourBombs : "";
+            if (cells[x][y].neighbourBombs == 1) {
+                cells[x][y].node.classList.add("green")
+            } else if (cells[x][y].neighbourBombs == 2) {
+                cells[x][y].node.classList.add("blue")
+            } else if (cells[x][y].neighbourBombs > 2) {
+                cells[x][y].node.classList.add("red")
+            }
 
             return;
         } else {
             cells[x][y].node.classList.add("revealed");
             cells[x][y].revealed = true;
-            let neighbors = getNeighbours(x,y);
+            let neighbors = getNeighbours(x, y);
             for (let i = 0; i < neighbors.length; i++) {
                 if (!neighbors[i].revealed && !neighbors[i].bomb) {
                     reveal(neighbors[i].x, neighbors[i].y);
@@ -199,10 +258,12 @@
         }
     };
 
-    drawGrid();
-    generateBombsPlaces();
-    setBombs();
-    setNeighborsCount();
+    const setupGame = () => {
+        drawGrid();
+        generateBombsPlaces();
+        setBombs();
+        setNeighborsCount();
+    }
 
     gameContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains("cell")) {
@@ -230,6 +291,11 @@
             }
         }
     });
+
+    restartBtn.addEventListener('click', setupGame);
+
+    setupGame();
+
 
 </script>
 
