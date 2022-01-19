@@ -1,0 +1,79 @@
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#game_container {
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(20, 30px);
+    width: min-content;
+    padding: 1rem;
+    border-radius: 16px;
+    border: 2px solid #000;
+    margin: 1.5rem auto;
+}
+
+.button {
+    display: block;
+    padding: 15px 25px;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #274628;
+    margin: 1rem auto;
+}
+
+.button:hover {
+    background-color: #3e8e41
+}
+
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #274628;
+    transform: translateY(4px);
+}
+
+div.cell {
+    background-repeat: no-repeat;
+    background-size: contain;
+    font-weight: bold;
+    height: 30px;
+    border-radius: 4px;
+    margin: 1px;
+    padding-top: 7px;
+    background-color: rgb(46, 125, 189);
+    box-sizing: border-box;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+div.revealed {
+    background-color: #eee;
+}
+
+div.bomb {
+    background-image: url("./bomb.png");
+}
+
+div.marked {
+    background-image: url("./pixel-flag.png");
+}
+
+div.red {
+    color: red;
+}
+
+div.blue {
+    color: blue;
+}
+
+div.green {
+    color: green;
+}
