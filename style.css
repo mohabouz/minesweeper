@@ -5,7 +5,7 @@ body {
 #game_container {
     text-align: center;
     display: grid;
-    grid-template-columns: repeat(20, 30px);
+    grid-template-columns: repeat(40, 30px);
     width: min-content;
     padding: 1rem;
     border-radius: 16px;
@@ -42,6 +42,8 @@ body {
 div.cell {
     background-repeat: no-repeat;
     background-size: contain;
+    -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: pixelated;
     font-weight: bold;
     height: 30px;
     border-radius: 4px;
@@ -52,6 +54,7 @@ div.cell {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
+    transition: all ease-in 250ms;
 }
 
 div.revealed {
@@ -59,7 +62,7 @@ div.revealed {
 }
 
 div.bomb {
-    background-image: url("./bomb.png");
+    background-image: url("./bomb-1.png");
 }
 
 div.marked {

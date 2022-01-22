@@ -4,13 +4,15 @@ const querySelector = (selector) => {
 const gameContainer = querySelector("div#game_container");
 const restartBtn = querySelector("button#restart");
 
-const GRID_WIDTH = 20;
+const GRID_WIDTH = 40;
 const GRID_HEIGHT = 20;
-const BOMBS_NUMBER = 50;
+const BOMBS_NUMBER = 70;
 
 let bombsLocations = [];
 let cells = [];
 let tempArr = [];
+let markedCellsCount = 0;
+
 
 const drawGrid = () => {
     cells = [];
@@ -103,19 +105,21 @@ const setNeighborsCount = () => {
 const revealAll = () => {
     for (let i = 0; i < cells.length; i++) {
         for (let j = 0; j < cells[i].length; j++) {
-            cells[i][j].node.classList.add("revealed");
-            cells[i][j].revealed = true;
-            cells[i][j].node.innerHTML = cells[i][j].neighbourBombs > 0 ? cells[i][j].neighbourBombs : "";
-            if (cells[i][j].neighbourBombs == 1) {
-                cells[i][j].node.classList.add("green")
-            } else if (cells[i][j].neighbourBombs == 2) {
-                cells[i][j].node.classList.add("blue")
-            } else if (cells[i][j].neighbourBombs > 2) {
-                cells[i][j].node.classList.add("red")
-            }
-            if (cells[i][j].bomb) {
-                cells[i][j].node.classList.add("bomb");
-            }
+            setTimeout(() => {
+                cells[i][j].node.classList.add("revealed");
+                cells[i][j].revealed = true;
+                cells[i][j].node.innerHTML = cells[i][j].neighbourBombs > 0 ? cells[i][j].neighbourBombs : "";
+                if (cells[i][j].neighbourBombs == 1) {
+                    cells[i][j].node.classList.add("green")
+                } else if (cells[i][j].neighbourBombs == 2) {
+                    cells[i][j].node.classList.add("blue")
+                } else if (cells[i][j].neighbourBombs > 2) {
+                    cells[i][j].node.classList.add("red")
+                }
+                if (cells[i][j].bomb) {
+                    cells[i][j].node.classList.add("bomb");
+                }
+            }, 200);
         }
     }
 };
@@ -135,7 +139,6 @@ const reveal = (x, y) => {
         } else if (cells[x][y].neighbourBombs > 2) {
             cells[x][y].node.classList.add("red")
         }
-
         return;
     } else {
         cells[x][y].node.classList.add("revealed");
@@ -146,6 +149,7 @@ const reveal = (x, y) => {
                 reveal(neighbors[i].x, neighbors[i].y);
             }
         }
+
     }
 }
 
@@ -153,9 +157,14 @@ const mark = (x, y) => {
     if (cells[x][y].marked) {
         cells[x][y].marked = false;
         cells[x][y].node.classList.remove("marked");
+        if (cells[x][y].bomb) markedCellsCount--;
     } else {
         cells[x][y].marked = true;
         cells[x][y].node.classList.add("marked");
+        if (cells[x][y].bomb) markedCellsCount++;
+        if (markedCellsCount == BOMBS_NUMBER) {
+            alert("Congrats, you've completed the game.");
+        }
     }
 };
 
