@@ -126,7 +126,7 @@ const revealAll = () => {
 
 const reveal = (x, y) => {
     if (cells[x][y].bomb) {
-        revealAll();
+        gameOver();
         return
     } else if (cells[x][y].neighbourBombs != 0) {
         cells[x][y].node.classList.add("revealed");
@@ -175,7 +175,13 @@ const setupGame = () => {
     setNeighborsCount();
 }
 
-gameContainer.addEventListener('click', (e) => {
+const gameOver = () => {
+    console.log("Game Over.");
+    alert("Game over !");
+    revealAll();
+}
+
+const leftClick = (e) => {
     if (e.target.classList.contains("cell")) {
         let coordinates = e.target.dataset.id.split(",");
         let x = parseInt(coordinates[0]);
@@ -184,13 +190,13 @@ gameContainer.addEventListener('click', (e) => {
             if (!cells[x][y].bomb) {
                 reveal(x, y);
             } else {
-                revealAll();
+                gameOver();
             }
         }
     }
-});
+}
 
-gameContainer.addEventListener('contextmenu', (e) => {
+const rightClick = (e) => {
     e.preventDefault();
     if (e.target.classList.contains("cell")) {
         let coordinates = e.target.dataset.id.split(",");
@@ -200,7 +206,11 @@ gameContainer.addEventListener('contextmenu', (e) => {
             mark(x, y);
         }
     }
-});
+}
+
+gameContainer.addEventListener('click', leftClick);
+
+gameContainer.addEventListener('contextmenu', rightClick);
 
 restartBtn.addEventListener('click', setupGame);
 
